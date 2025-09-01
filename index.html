@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            transition: background-color 0.3s ease;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        .question-card {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .label {
+            font-weight: 600;
+            color: #374151;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .input-range {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #d1d5db;
+            border-radius: 4px;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+        .input-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+        .input-range:hover::-webkit-slider-thumb {
+            background: #4338ca;
+        }
+        .input-range-value {
+            display: inline-block;
+            min-width: 20px;
+            text-align: center;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        .rating-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .button {
+            background-color: #4f46e5;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            background-color: #4338ca;
+            transform: translateY(-1px);
+        }
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .result-box h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .good-candidate {
+            background-color: #d1fae5;
+            border: 2px solid #34d399;
+        }
+        .good-candidate h3 {
+            color: #065f46;
+        }
+        .poor-candidate {
+            background-color: #fee2e2;
+            border: 2px solid #ef4444;
+        }
+        .poor-candidate h3 {
+            color: #b91c1c;
+        }
+        .maybe-candidate {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+        }
+        .maybe-candidate h3 {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Decision Helper</h1>
+        <p class="text-center text-gray-600 mb-8">Answer the questions below to determine if your chosen process is a good candidate for the project.</p>
+
+        <div id="questions-form">
+            <div class="question-card">
+                <div class="input-group">
+                    <label for="importance" class="label">1. How important is this process to your work or personal life?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="importance" min="1" max="5" value="3" class="input-range">
+                        <span id="importanceValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>Not Important</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Very Important</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="frequency" class="label">2. How frequently do you perform these activities?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="frequency" min="1" max="5" value="3" class="input-range">
+                        <span id="frequencyValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>Rarely</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Very Frequently</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="input-group">
+                    <label for="issues" class="label">3. How often do the issues or "pain points" occur?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="issues" min="1" max="5" value="3" class="input-range">
+                        <span id="issuesValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>Never</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Very Frequently</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="impact" class="label">4. What are the impacts on your performance or life?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="impact" min="1" max="5" value="3" class="input-range">
+                        <span id="impactValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>Minimal</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Significant</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="input-group">
+                    <label for="complexity" class="label">5. Does the process have multiple activities and decision points?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="complexity" min="1" max="5" value="3" class="input-range">
+                        <span id="complexityValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>No Complexity</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>High Complexity</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="actionability" class="label">6. Can you realistically analyze and propose changes to this process?</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="actionability" min="1" max="5" value="3" class="input-range">
+                        <span id="actionabilityValue" class="input-range-value">3</span>
+                    </div>
+                    <div class="rating-grid">
+                        <span>Cannot Change</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span>Full Control</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-6">
+                <button id="evaluateBtn" class="button">Evaluate</button>
+            </div>
+        </div>
+
+        <div id="result" class="result-box hidden">
+            <h3 id="resultHeader"></h3>
+            <p id="resultText" class="text-gray-700"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const importanceRange = document.getElementById('importance');
+            const frequencyRange = document.getElementById('frequency');
+            const issuesRange = document.getElementById('issues');
+            const impactRange = document.getElementById('impact');
+            const complexityRange = document.getElementById('complexity');
+            const actionabilityRange = document.getElementById('actionability');
+
+            const importanceValue = document.getElementById('importanceValue');
+            const frequencyValue = document.getElementById('frequencyValue');
+            const issuesValue = document.getElementById('issuesValue');
+            const impactValue = document.getElementById('impactValue');
+            const complexityValue = document.getElementById('complexityValue');
+            const actionabilityValue = document.getElementById('actionabilityValue');
+
+            const evaluateBtn = document.getElementById('evaluateBtn');
+            const resultBox = document.getElementById('result');
+            const resultHeader = document.getElementById('resultHeader');
+            const resultText = document.getElementById('resultText');
+
+            const ranges = [
+                { range: importanceRange, value: importanceValue },
+                { range: frequencyRange, value: frequencyValue },
+                { range: issuesRange, value: issuesValue },
+                { range: impactRange, value: impactValue },
+                { range: complexityRange, value: complexityValue },
+                { range: actionabilityRange, value: actionabilityValue }
+            ];
+
+            ranges.forEach(item => {
+                item.range.addEventListener('input', () => {
+                    item.value.textContent = item.range.value;
+                });
+            });
+
+            evaluateBtn.addEventListener('click', () => {
+                const importance = parseInt(importanceRange.value);
+                const frequency = parseInt(frequencyRange.value);
+                const issues = parseInt(issuesRange.value);
+                const impact = parseInt(impactRange.value);
+                const complexity = parseInt(complexityRange.value);
+                const actionability = parseInt(actionabilityRange.value);
+
+                // Calculate the average score
+                const totalScore = importance + frequency + issues + impact + complexity + actionability;
+                const averageScore = totalScore / 6;
+
+                // Determine the recommendation and message
+                let recommendation = '';
+                let message = '';
+                let className = '';
+
+                if (actionability < 3) {
+                    recommendation = "Poor Candidate";
+                    message = "This process may not be a good fit because you don't have enough control or influence to propose meaningful changes. Focus on a process where you can truly be the agent of change.";
+                    className = "poor-candidate";
+                } else if (complexity < 3) {
+                    recommendation = "Poor Candidate";
+                    message = "This process appears to be too simple for the project. Look for a process with more steps, decisions, and potential for inefficiencies to demonstrate your BPMN skills.";
+                    className = "poor-candidate";
+                } else if (averageScore >= 4) {
+                    recommendation = "Excellent Candidate!";
+                    message = "Based on your responses, this process is a fantastic candidate for the project. It is important, has clear problems, and you have the ability to make meaningful, measurable changes.";
+                    className = "good-candidate";
+                } else if (averageScore >= 3) {
+                    recommendation = "Good Candidate";
+                    message = "This process is a solid choice. It meets the core requirements and will allow you to demonstrate your understanding of process improvement. Focus on clearly defining the issues and measurable outcomes in your analysis.";
+                    className = "good-candidate";
+                } else {
+                    recommendation = "Consider Another Process";
+                    message = "This process may be too simple or lack the clear issues needed for a strong project. You might find it easier to work with a more complex or impactful process.";
+                    className = "maybe-candidate";
+                }
+
+                // Display the result
+                resultBox.classList.remove('hidden', 'good-candidate', 'poor-candidate', 'maybe-candidate');
+                resultBox.classList.add(className);
+                resultHeader.textContent = recommendation;
+                resultText.textContent = message;
+
+                // Scroll to the result
+                resultBox.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
